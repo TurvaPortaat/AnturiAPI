@@ -1,0 +1,34 @@
+#Lets Create, Read, Update, Delete with them database sensordatas
+from sqlalchemy.orm import Session
+from .models import Sensor
+from .schemas import SensorCreate, SensorUpdate
+
+def get_sensor(db: Session, sensor_id:int):
+    return db.query(Sensor).filter(Sensor.id == sensor_id).first()
+
+def get_sensors(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(Sensor).offset(skip).limit(limit).all()
+
+def create_sensor(db:Session, sensor: SensorCreate):
+    db_sensor=Sensor(**sensor.dict())
+    db.add(db_sensor)
+    db.commit()
+    db.refresh(db_sensor)
+    return db_sensor
+
+def update_sensor(db: Session, sensor_id: int, sensor: SensorUpdate):
+    db_sensor=db.query(Sensor).filter(Sensor.id == sensor_id).first()
+    if db_sensor:
+        update_data = sensor.dict(exclude_unset=True)
+        for key, value in update_data.items():
+            settattr(db_sensor, key, value)
+        db.commit()
+        db.refresh(db.sensor)
+    return db_sensor
+
+def delete_sensor(db:Session, sensor_id: int):
+    db_sensor = db.query(Sensor).filter(Sensor.id == sensor_id).first()
+    if db_sensor:
+        db.delete(db_sensor)
+        db.commit()
+    return db_sensor

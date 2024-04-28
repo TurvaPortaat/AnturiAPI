@@ -1,0 +1,1 @@
+# Ajatus on katkolla
