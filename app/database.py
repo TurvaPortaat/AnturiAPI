@@ -22,7 +22,7 @@ class Block(Base):
 class Measurement(Base):
     __tablename__ = 'measurements'
     id = Column(Integer, primary_key=True)
-    sensosr_id = Column(Integer, ForeignKey('sensor.id'))
+    sensor_id = Column(Integer, ForeignKey('sensor.id'))
     temperature = Column(Float, nullable=False)
     timestamp = Column(DateTime, default=lambda: datetime.now(timezone.utc)) # Datetimeen on asetettu lambdalla aikavyöhyketietoinen aikaleima
     sensor = relationship("Sensor", back_populates="measurements")
